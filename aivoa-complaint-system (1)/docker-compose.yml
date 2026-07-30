@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: aivoa_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: aivoa_user
+      POSTGRES_PASSWORD: aivoa_pass
+      POSTGRES_DB: aivoa_complaints
+    ports:
+      - "5433:5432"
+    volumes:
+      - aivoa_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aivoa_user -d aivoa_complaints"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    container_name: aivoa_backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://aivoa_user:aivoa_pass@db:5432/aivoa_complaints
+      FRONTEND_ORIGIN: http://localhost:5173
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - aivoa_uploads:/app/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: http://localhost:8000/api
+    container_name: aivoa_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "5173:5173"
+
+volumes:
+  aivoa_pg_data:
+  aivoa_uploads:
