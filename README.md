@@ -1,5 +1,10 @@
 # AIVOA — AI-Powered Customer Complaint Management System
 
+[Watch the demo video](https://drive.google.com/file/d/1YHAhd7PKjjA59fjo5vwQD3A8QjtV9x1l/view?usp=drivesdk)
+
+[Live app](https://aivoa-complaint-management-system-3.onrender.com)
+
+
 A production-grade pharmaceutical customer complaint intake and QMS (Quality Management System) platform. A QA analyst pastes a customer email or uploads a scanned complaint PDF into the **AIVOA Copilot** chat panel; a LangGraph pipeline backed by Groq LLMs extracts structured fields, runs a risk assessment, checks completeness, screens for duplicates, and recommends a root cause and CAPA — all while incrementally populating an editable form on the left.
 
 ---
